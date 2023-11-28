@@ -235,6 +235,7 @@ const verifyAdmin = async (req, res) => {
     const admin = await Admin.findOne({ _id: id }).select(
       "-_id name email role"
     );
+    if (!admin) throw Error("Admin not found")
     res.status(200).json(admin);
   } catch (error) {
     res.status(400).json({ error: "Request not authorized" });
