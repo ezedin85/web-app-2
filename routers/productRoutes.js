@@ -17,7 +17,7 @@ router.post("/add", adminAuth(['super', 'regular']), addProduct);
 router.get("/:id", getProduct);
 
 // api/products/
-router.get("/", getProducts);
+router.get("/", getProducts);git remote add origin https://github.com/ezedin85/web-app-2.git
 
 // api/products/64db3d0d9285e79e6ed506ef
 router.delete("/:id", adminAuth(['super', 'regular']), deleteProduct);
