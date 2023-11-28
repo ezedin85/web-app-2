@@ -9,21 +9,19 @@ const {
 } = require("../controllers/orderController");
 const adminAuth = require("../middlewares/adminAuth");
 
-router.use(adminAuth(['super', 'regular']),);
-
 // /api/orders/add
 router.post("/add", addOrder);
 
 // api/orders/64db3d0d9285e79e6ed506ef
-router.get("/:id", getOrder);
+router.get("/:id", adminAuth(['super', 'regular']), getOrder);
 
 // api/orders/
-router.get("/", getOrders);
+router.get("/", adminAuth(['super', 'regular']), getOrders);
 
 // api/orders/64db3d0d9285e79e6ed506ef
-router.patch("/set-sold-value/:id", setSoldValue);
+router.patch("/set-sold-value/:id", adminAuth(['super', 'regular']), setSoldValue);
 
 // api/orders/64db3d0d9285e79e6ed506ef
-router.delete("/:id", deleteOrder);
+router.delete("/:id", adminAuth(['super', 'regular']), deleteOrder);
 
 module.exports = router;

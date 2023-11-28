@@ -16,12 +16,12 @@ const orderSchema = mongoose.Schema({
                 ref: 'Product',
                 required: true,
             },
-            order_quantity: {
+            quantity: {
                 type: Number,
                 required: true,
             },
             sold_quantity: Number,
-            unit_cost: Number
+            price: Number
         }
     ],
     status: {
