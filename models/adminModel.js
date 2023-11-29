@@ -61,6 +61,7 @@ adminSchema.statics.addAdmin = async function (
     throw Error(Error);
   }
 };
+
 adminSchema.statics.login = async function (email, password) {
   if (!email || !password) {
     throw Error("All Fields Must be filled");

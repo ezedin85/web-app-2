@@ -23,7 +23,7 @@ const login = async (req, res) => {
   try {
     const admin = await Admin.login(email, password);
     const token = createToken(admin._id);
-    res.status(201).json({ email, token, role: admin.role });
+    res.status(201).json({ email, token, role: admin.role, name: admin.name });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

@@ -30,8 +30,10 @@ const getOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({});
-    res.status(200).json(orders);
+    const orders = await Order.find({})
+    // .populate('products.product', 'name')
+    .sort("-createdAt")
+    res.status(200).json(orders)
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -39,12 +41,11 @@ const getOrders = async (req, res) => {
 
 const setSoldValue = async (req, res) => {
   const {id} = req.params
-  const { products } = req.body
 
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
       id,
-      { products },
+      req.body,
       { new: true, runValidators: true }
     );
     res.json(updatedOrder);
