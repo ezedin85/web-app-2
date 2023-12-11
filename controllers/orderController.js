@@ -23,7 +23,7 @@ const getOrder = async (req, res) => {
     if (!mongoose.isValidObjectId(id)) {
       throw Error("not a valid id");
     }
-    const order = await Order.findById(id).populate("products.product", "name image");
+    const order = await Order.findById(id).populate("products.product", "name");
 
     if (order === null) throw Error("no order found by this id!");
     res.status(200).json(order);
@@ -35,7 +35,7 @@ const getOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({})
-    .populate('products.product', 'name _id category')
+    .populate('products.product', 'name _id category image')
     .sort("-createdAt")
     res.status(200).json(orders)
   } catch (error) {
