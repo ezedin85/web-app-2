@@ -25,7 +25,7 @@ router.get("/get-me", adminAuth(['super', , 'regular']), getMe);
 router.get("/:id", adminAuth(['super']), getAdmin);
 
 // api/admins/add
-router.post("/add",  addAdmin);
+router.post("/add", adminAuth(['super']), addAdmin);
 
 // PUBLIC --- /api/admins/login
 router.post("/login", login);

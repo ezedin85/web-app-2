@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const adminSchema = mongoose.Schema(
+const productSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -18,7 +18,10 @@ const adminSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    img_url: String,
+    image: {
+      secure_url: String,
+      public_id: String
+    },
     price: {
         type: Number,
         required: true
@@ -32,4 +35,4 @@ const adminSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", adminSchema);
+module.exports = mongoose.model("Product", productSchema);

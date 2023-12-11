@@ -5,6 +5,7 @@ const cors = require("cors")
 const adminRoutes = require("./routers/adminRoutes")
 const productRoutes = require("./routers/productRoutes")
 const orderRoutes = require("./routers/orderRoutes")
+const categoryRoutes = require("./routers/categoryRoutes")
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(express.json({limit: '50mb'}))
 app.use('/api/admins', adminRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
+app.use('/api/categories', categoryRoutes)
 
 mongoose.connect(process.env.URL)
     .then(()=>app.listen(5000, ()=>{console.log("listening on port 5000");}))

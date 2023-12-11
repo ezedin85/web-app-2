@@ -98,21 +98,22 @@ const deleteAdmin = async (req, res) => {
 
 const updateMe = async (req, res) => {
   const id = req.userId;
-  const { name, email, role } = req.body;
+  const { name, email } = req.body;
   try {
 
-    //handle comon update errors
-    await handleCommonUpdateErrors(email, role, id);
+    const admin = await Admin.findOne({ email });
+    if (admin && !admin._id.equals(id)) {
+      throw Error("email already in use");
+    }
 
     const updatedData = await Admin.findByIdAndUpdate(
       id,
-      { name, email, role },
+      { name, email },
       { new: true, runValidators: true }
     );
     res.json({
       name: updatedData.name,
       email: updatedData.email,
-      role: updatedData.role,
     });
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -123,7 +124,6 @@ const updateUser = async (req, res) => {
   const { id } = req.params;
   const { name, email, role } = req.body;
   try {
-
     //handle comon update errors
     await handleCommonUpdateErrors(email, role, id);
 
@@ -235,7 +235,7 @@ const verifyAdmin = async (req, res) => {
     const admin = await Admin.findOne({ _id: id }).select(
       "-_id name email role"
     );
-    if (!admin) throw Error("Admin not found")
+    if (!admin) throw Error("Admin not found");
     res.status(200).json(admin);
   } catch (error) {
     res.status(400).json({ error: "Request not authorized" });

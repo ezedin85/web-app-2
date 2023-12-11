@@ -1,4 +1,5 @@
 const Order = require("../models/orderModel");
+const mongoose = require("mongoose");
 
 const addOrder = async (req, res) => {
   const { customer_name, phone, products, status } = req.body;
@@ -19,6 +20,9 @@ const addOrder = async (req, res) => {
 const getOrder = async (req, res) => {
   const { id } = req.params;
   try {
+    if (!mongoose.isValidObjectId(id)) {
+      throw Error("not a valid id");
+    }
     const order = await Order.findById(id).populate("products.product", "name");
 
     if (order === null) throw Error("no order found by this id!");
@@ -31,7 +35,7 @@ const getOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({})
-    // .populate('products.product', 'name')
+    .populate('products.product', 'name _id category')
     .sort("-createdAt")
     res.status(200).json(orders)
   } catch (error) {
@@ -43,6 +47,9 @@ const setSoldValue = async (req, res) => {
   const {id} = req.params
 
   try {
+    if (!mongoose.isValidObjectId(id)) {
+      throw Error("not a valid id");
+    }
     const updatedOrder = await Order.findByIdAndUpdate(
       id,
       req.body,
@@ -52,7 +59,6 @@ const setSoldValue = async (req, res) => {
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
-
 };
 
 const deleteOrder = async (req, res) => {
