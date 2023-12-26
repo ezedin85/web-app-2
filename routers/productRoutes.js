@@ -12,7 +12,6 @@ const uploadFile = require("../middlewares/multer");
 
 router.post("/add", adminAuth(['super', 'regular']), uploadFile, addProduct);
 
-
 // api/products/64db3d0d9285e79e6ed506ef
 router.get("/:id", getProduct);
 

@@ -14,7 +14,7 @@ const addProduct = async (req, res) => {
       );
 
     //upload the image to cloudinary
-    cloudinary.uploader.upload(req.file.path, async function (err, result) {
+    await cloudinary.uploader.upload(req.file.path, async function (err, result) {
       if (err)
         return res
           .status(500)
@@ -71,8 +71,8 @@ const deleteProduct = async (req, res) => {
       throw Error("not a valid id");
     }
 
-    const user = await Product.findById(id)
-    await cloudinary.uploader.destroy(user.image?.public_id)
+    const user = await Product.findById(id);
+    await cloudinary.uploader.destroy(user.image?.public_id);
 
     const response = await Product.deleteOne({ _id: id });
     if (response.deletedCount === 0) {
@@ -90,13 +90,38 @@ const updateProduct = async (req, res) => {
   const { name, price, category, sub_category, soldOut } = req.body;
 
   try {
+    const product = await Product.findById(id);
+    image = product.image;
 
+    await cloudinary.uploader.destroy(product.image?.public_id); //remove the image from cloudinary
+    if (req.file) {
+      //upload the image to cloudinary
+      await cloudinary.uploader.upload(req.file.path, async function (err, result) {
+        if (err)
+          return res
+            .status(500)
+            .json({ error: "Error while uploading the image" });
+
+        // if image uploaded successfully
+        image = {
+          secure_url: result.secure_url,
+          public_id: result.public_id,
+        };
+      });
+    }
     const updatedData = await Product.findByIdAndUpdate(
       id,
-      { name, price, category, sub_category, soldOut },
+      {
+        name,
+        price,
+        image,
+        category,
+        sub_category,
+        soldOut,
+      },
       { new: true, runValidators: true }
     );
-    res.json(updatedData);
+    res.status(201).json(updatedData);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
@@ -107,5 +132,5 @@ module.exports = {
   getProduct,
   getProducts,
   deleteProduct,
-  updateProduct
+  updateProduct,
 };
